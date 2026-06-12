@@ -98,6 +98,8 @@ export function Button({
   return (
     <button
       disabled={disabled || isLoading}
+      aria-disabled={disabled || isLoading}
+      aria-label={props['aria-label'] || (typeof children === 'string' ? `${children} button` : undefined)}
       className={allClasses}
       onClick={handleClick}
       {...props}

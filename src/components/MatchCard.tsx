@@ -41,7 +41,12 @@ export function MatchCard({
   const matchTime = match.match_time?.substring(0, 5) || 'TBA'
 
   return (
-    <Card variant="default" className="space-y-3">
+    <Card
+      variant="default"
+      className="space-y-3"
+      role="region"
+      aria-label={`Match: ${match.home_team} vs ${match.away_team}`}
+    >
       {/* Match Header */}
       <div className="space-y-1">
         <h3 className="text-sm font-medium text-text-primary">
@@ -53,16 +58,22 @@ export function MatchCard({
       </div>
 
       {/* Score Inputs */}
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-2 items-center" role="group" aria-label="Match score prediction">
         <div className="flex-1">
+          <label htmlFor={`home-score-${match.id}`} className="sr-only">
+            {match.home_team} score
+          </label>
           <ScoreInput
             value={home}
             onChange={setHome}
             disabled={isLocked}
           />
         </div>
-        <span className="text-sm font-medium text-text-secondary">vs</span>
+        <span className="text-sm font-medium text-text-secondary" aria-hidden="true">vs</span>
         <div className="flex-1">
+          <label htmlFor={`away-score-${match.id}`} className="sr-only">
+            {match.away_team} score
+          </label>
           <ScoreInput
             value={away}
             onChange={setAway}

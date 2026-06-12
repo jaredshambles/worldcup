@@ -19,22 +19,31 @@ export function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
   }
 
   return (
-    <div className="bg-white rounded-md border border-border overflow-hidden">
+    <div
+      role="table"
+      aria-label="Live leaderboard with player rankings"
+      className="bg-white rounded-md border border-border overflow-hidden"
+    >
       {/* Header */}
-      <div className="grid grid-cols-[40px_1fr_60px_60px_60px_70px] sm:grid-cols-[50px_1fr_70px_70px_70px_80px] gap-2 px-3 py-2 bg-surface-hover text-xs text-text-secondary font-semibold uppercase tracking-wide">
-        <span>#</span>
-        <span>Player</span>
-        <span className="text-center">Exact</span>
-        <span className="text-center">Winner</span>
-        <span className="text-center">Bonus</span>
-        <span className="text-right">Total</span>
+      <div
+        role="row"
+        className="grid grid-cols-[40px_1fr_60px_60px_60px_70px] sm:grid-cols-[50px_1fr_70px_70px_70px_80px] gap-2 px-3 py-2 bg-surface-hover text-xs text-text-secondary font-semibold uppercase tracking-wide"
+      >
+        <span role="columnheader">Rank</span>
+        <span role="columnheader">Player</span>
+        <span role="columnheader" className="text-center">Exact</span>
+        <span role="columnheader" className="text-center">Winner</span>
+        <span role="columnheader" className="text-center">Bonus</span>
+        <span role="columnheader" className="text-right">Total</span>
       </div>
 
       {/* Rows */}
       {entries.map(entry => (
-        <div key={entry.player_id}>
+        <div key={entry.player_id} role="row">
           <button
             onClick={() => setExpanded(expanded === entry.player_id ? null : entry.player_id)}
+            aria-expanded={expanded === entry.player_id}
+            aria-label={`${entry.nickname || entry.full_name} - Rank ${entry.rank} with ${entry.total_points} total points`}
             className="grid grid-cols-[40px_1fr_60px_60px_60px_70px] sm:grid-cols-[50px_1fr_70px_70px_70px_80px] gap-2 px-3 py-3 w-full text-left hover:bg-surface-hover transition-colors border-t border-border"
           >
             <span className="flex items-center">
@@ -53,7 +62,11 @@ export function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
 
           {/* Expanded breakdown */}
           {expanded === entry.player_id && (
-            <div className="px-3 pb-3 bg-surface-hover border-t border-border">
+            <div
+              role="region"
+              aria-label={`Score breakdown for ${entry.nickname || entry.full_name}`}
+              className="px-3 pb-3 bg-surface-hover border-t border-border"
+            >
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 py-3 text-xs">
                 {[
                   { label: 'Group', pts: entry.group_points },

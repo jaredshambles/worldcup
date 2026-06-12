@@ -9,11 +9,18 @@ interface StageTabsProps {
 
 export function StageTabs({ activeStage, onStageChange }: StageTabsProps) {
   return (
-    <div className="sticky top-14 z-40 bg-white border-b border-border">
+    <div
+      role="tablist"
+      aria-label="Match stages"
+      className="sticky top-14 z-40 bg-white border-b border-border"
+    >
       <div className="max-w-7xl mx-auto px-4 flex gap-2 overflow-x-auto">
         {STAGE_ORDER.map(stage => (
           <button
             key={stage}
+            role="tab"
+            aria-selected={activeStage === stage}
+            aria-controls={`${stage}-panel`}
             onClick={() => onStageChange(stage)}
             className={`
               px-3 py-3 text-sm font-medium whitespace-nowrap

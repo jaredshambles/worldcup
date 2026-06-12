@@ -6,6 +6,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
   variant?: CardVariant
   interactive?: boolean
+  tabIndex?: number
 }
 
 export function Card({
@@ -25,7 +26,7 @@ export function Card({
   }
 
   // Interactive classes - only applied to default variant
-  const interactiveClasses = interactive && variant === 'default' ? 'cursor-pointer hover:bg-surface-hover shadow-hover' : ''
+  const interactiveClasses = interactive && variant === 'default' ? 'cursor-pointer hover:bg-surface-hover shadow-hover focus:outline-2 focus:outline-offset-2 focus:outline-accent-primary' : ''
 
   // Combine all classes
   const allClasses = [

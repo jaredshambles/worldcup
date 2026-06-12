@@ -8,10 +8,23 @@ export function RankCard({ entry }: { entry: LeaderboardEntry }) {
   const [expanded, setExpanded] = useState(false)
 
   return (
-    <Card variant="highlight" interactive onClick={() => setExpanded(!expanded)}>
+    <Card
+      role="region"
+      aria-label={`Your current rank: #${entry.rank} with ${entry.total_points} points`}
+      variant="highlight"
+      interactive
+      onClick={() => setExpanded(!expanded)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          setExpanded(!expanded)
+        }
+      }}
+      tabIndex={0}
+    >
       <div className="text-center space-y-2">
         {/* Rank Number - Hero Size */}
-        <div className="text-rank-hero font-light leading-none">
+        <div className="text-rank-hero font-light leading-none" aria-label={`Rank ${entry.rank}`}>
           #{entry.rank}
         </div>
 
@@ -38,7 +51,7 @@ export function RankCard({ entry }: { entry: LeaderboardEntry }) {
 
       {/* Expanded Breakdown */}
       {expanded && (
-        <div className="mt-4 pt-4 border-t border-highlight-border space-y-3">
+        <div className="mt-4 pt-4 border-t border-highlight-border space-y-3" role="region" aria-label="Points breakdown by stage">
           <h3 className="text-xs uppercase tracking-wide font-medium text-text-secondary">
             Stage Breakdown
           </h3>

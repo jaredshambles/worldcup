@@ -65,12 +65,12 @@ export function Nav() {
   if (user?.is_admin) allLinks.push({ href: '/admin', label: 'Admin' })
 
   return (
-    <nav className="bg-white border-b border-border sticky top-0 z-50">
+    <nav className="bg-white border-b border-border sticky top-0 z-50" aria-label="Main navigation">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-14">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <span className="text-xl">&#9917;</span>
+          <Link href="/" className="flex items-center gap-2 shrink-0" aria-label="WC 2026 Home">
+            <span className="text-xl" aria-hidden="true">&#9917;</span>
             <span className="font-bold text-accent-primary hidden sm:inline">WC 2026</span>
           </Link>
 
@@ -85,6 +85,7 @@ export function Nav() {
                     ? 'bg-accent-primary text-white font-semibold'
                     : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover'
                 }`}
+                aria-current={pathname === link.href ? 'page' : undefined}
               >
                 {link.label}
               </Link>
@@ -100,6 +101,7 @@ export function Nav() {
                 </span>
                 <button
                   onClick={handleSignOut}
+                  aria-label="Sign out from your account"
                   className="text-xs px-2 py-1 rounded bg-surface-hover text-text-secondary hover:text-text-primary transition-colors"
                 >
                   Sign Out
@@ -117,9 +119,12 @@ export function Nav() {
             {/* Mobile hamburger */}
             <button
               className="md:hidden p-1"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
               onClick={() => setMenuOpen(!menuOpen)}
             >
-              <svg className="w-6 h-6 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-6 h-6 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 {menuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
@@ -132,7 +137,7 @@ export function Nav() {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="md:hidden pb-3 border-t border-border">
+          <div id="mobile-menu" className="md:hidden pb-3 border-t border-border">
             {allLinks.map(link => (
               <Link
                 key={link.href}
@@ -143,6 +148,7 @@ export function Nav() {
                     ? 'bg-accent-primary text-white font-semibold'
                     : 'text-text-secondary hover:text-text-primary'
                 }`}
+                aria-current={pathname === link.href ? 'page' : undefined}
               >
                 {link.label}
               </Link>

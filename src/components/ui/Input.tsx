@@ -61,21 +61,34 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     const finalClassName = className ? `${baseClasses} ${className}` : baseClasses
 
+    const inputId = props.id || `input-${Math.random().toString(36).substr(2, 9)}`
+
     return (
       <div className="flex flex-col gap-1">
         {label && (
-          <label className="text-xs uppercase tracking-wider text-text-secondary">
+          <label htmlFor={inputId} className="text-xs uppercase tracking-wider text-text-secondary font-medium">
             {label}
           </label>
         )}
         <input
           ref={ref}
+          id={inputId}
           type={type}
           className={finalClassName}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
           {...props}
         />
-        {error && <p className="text-xs text-danger">{error}</p>}
-        {helperText && !error && <p className="text-xs text-text-secondary">{helperText}</p>}
+        {error && (
+          <p id={`${inputId}-error`} className="text-xs text-danger" role="alert">
+            {error}
+          </p>
+        )}
+        {helperText && !error && (
+          <p id={`${inputId}-helper`} className="text-xs text-text-secondary">
+            {helperText}
+          </p>
+        )}
       </div>
     )
   }
@@ -139,6 +152,8 @@ export function ScoreInput({
       onChange={handleChange}
       onFocus={onFocus}
       disabled={disabled}
+      aria-label="Score input"
+      aria-disabled={disabled}
       className={[
         // Width and height: full width, 48px height (h-12)
         'w-full h-12',
