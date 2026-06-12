@@ -15,15 +15,22 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
-    })
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      })
 
-    if (error) {
-      setError(error.message)
-    } else {
-      setSent(true)
+      if (error) {
+        setError(error.message || 'Failed to send magic link. Please try again.')
+        console.error('Auth error:', error)
+      } else {
+        setSent(true)
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred'
+      setError(message)
+      console.error('Unexpected error:', err)
     }
     setLoading(false)
   }
