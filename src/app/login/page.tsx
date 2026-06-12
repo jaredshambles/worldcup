@@ -48,15 +48,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-md bg-card rounded-lg border border-border p-6 sm:p-8 space-y-6">
-        <div className="text-center">
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 py-8">
+      <div className="w-full max-w-md space-y-6">
+        <div className="bg-card rounded-lg border border-border p-6 sm:p-8 text-center">
           <div className="text-4xl mb-2">&#9917;</div>
           <h1 className="text-xl sm:text-2xl font-bold">Sign in to WC Bracket Challenge</h1>
-          <p className="text-muted text-sm mt-1">Enter your email to receive a magic link</p>
+          <p className="text-muted text-sm mt-2">Enter your email to receive a magic link</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="bg-card rounded-lg border border-border p-6 sm:p-8 space-y-4">
           <input
             type="email"
             placeholder="you@example.com"
