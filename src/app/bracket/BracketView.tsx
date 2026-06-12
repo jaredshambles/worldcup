@@ -11,6 +11,18 @@ interface BracketViewProps {
   groupStandings: Record<string, { team: string; pts: number; gd: number; gf: number }[]>
 }
 
+function formatMatchTime(date: Date): string {
+  const timeFormatter = new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZoneName: 'short',
+  })
+  return timeFormatter.format(date)
+}
+
 export function BracketView({ knockoutMatches, groupStandings }: BracketViewProps) {
   const [view, setView] = useState<'group' | 'knockout'>('group')
 
@@ -100,22 +112,35 @@ export function BracketView({ knockoutMatches, groupStandings }: BracketViewProp
 
       {/* Knockout Matches */}
       <div className="space-y-4">
-        {knockoutMatches_filtered.map(match => (
-          <Card key={match.id} variant="default" className="space-y-2">
-            <p className="text-xs text-text-secondary uppercase font-medium">
-              {STAGE_LABELS[match.stage]}
-            </p>
-            <div className="space-y-1">
-              <p className="text-sm text-text-primary">{match.home_team || 'TBD'}</p>
-              <p className="text-sm text-text-secondary">{match.away_team || 'TBD'}</p>
-            </div>
-            {match.status === 'finished' && (
-              <p className="text-sm font-semibold text-success">
-                {match.home_score}-{match.away_score}
+        {knockoutMatches_filtered.map(match => {
+          const matchDateTime = match.match_date && match.match_time
+            ? new Date(`${match.match_date}T${match.match_time}`)
+            : null
+
+          const formattedTime = matchDateTime ? formatMatchTime(matchDateTime) : null
+
+          return (
+            <Card key={match.id} variant="default" className="space-y-2">
+              <p className="text-xs text-text-secondary uppercase font-medium">
+                {STAGE_LABELS[match.stage]}
               </p>
-            )}
-          </Card>
-        ))}
+              {formattedTime && (
+                <p className="text-xs text-text-secondary">
+                  {formattedTime}
+                </p>
+              )}
+              <div className="space-y-1">
+                <p className="text-sm text-text-primary">{match.home_team || 'TBD'}</p>
+                <p className="text-sm text-text-secondary">{match.away_team || 'TBD'}</p>
+              </div>
+              {match.status === 'finished' && (
+                <p className="text-sm font-semibold text-success">
+                  {match.home_score}-{match.away_score}
+                </p>
+              )}
+            </Card>
+          )
+        })}
       </div>
     </div>
   )
