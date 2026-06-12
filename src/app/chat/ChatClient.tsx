@@ -3,22 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { ChatMessage } from '@/lib/types'
-import Link from 'next/link'
-
-function formatTime(iso: string) {
-  const d = new Date(iso)
-  return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
-}
-
-function formatDate(iso: string) {
-  const d = new Date(iso)
-  const today = new Date()
-  if (d.toDateString() === today.toDateString()) return 'Today'
-  const yesterday = new Date(today)
-  yesterday.setDate(yesterday.getDate() - 1)
-  if (d.toDateString() === yesterday.toDateString()) return 'Yesterday'
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-}
 
 export function ChatClient({
   userId,
@@ -55,7 +39,7 @@ export function ChatClient({
       .subscribe()
 
     return () => { supabase.removeChannel(channel) }
-  }, [])
+  }, [supabase])
 
   // Auto-scroll
   useEffect(() => {
@@ -74,68 +58,57 @@ export function ChatClient({
     setSending(false)
   }
 
-  // Group messages by date
-  let lastDate = ''
+  const name = (msg: ChatMessage) => msg.profiles?.nickname || msg.profiles?.full_name || 'Unknown'
+  const isMe = (msg: ChatMessage) => msg.player_id === userId
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]">
-      <h1 className="text-2xl font-bold mb-4">Group Chat</h1>
+      <h1 className="text-2xl font-bold mb-4 text-text-primary">Group Chat</h1>
 
-      <div className="flex-1 overflow-y-auto bg-card border border-border rounded-lg p-4 space-y-1">
-        {messages.map(msg => {
-          const msgDate = formatDate(msg.created_at)
-          const showDate = msgDate !== lastDate
-          lastDate = msgDate
-          const name = msg.profiles?.nickname || msg.profiles?.full_name || 'Unknown'
-          const isMe = msg.player_id === userId
-
-          return (
-            <div key={msg.id}>
-              {showDate && (
-                <div className="text-center text-xs text-muted py-2">{msgDate}</div>
+      <div className="flex-1 overflow-y-auto bg-white border border-border rounded-lg p-4 space-y-2">
+        {messages.map(msg => (
+          <div key={msg.id} className={`flex gap-2 py-2 ${isMe(msg) ? 'justify-end' : ''}`}>
+            <div className={`max-w-xs ${isMe(msg) ? 'order-2' : ''}`}>
+              {!isMe(msg) && (
+                <div className="text-xs font-semibold mb-0.5 text-text-primary">{name(msg)}</div>
               )}
-              <div className={`flex gap-2 py-1 ${isMe ? 'justify-end' : ''}`}>
-                <div className={`max-w-[75%] ${isMe ? 'order-2' : ''}`}>
-                  {!isMe && (
-                    <div className="text-xs text-accent font-semibold mb-0.5">{name}</div>
-                  )}
-                  <div className={`px-3 py-2 rounded-lg text-sm ${
-                    isMe
-                      ? 'bg-accent/20 text-foreground'
-                      : 'bg-card-hover text-foreground'
-                  }`}>
-                    {msg.message}
-                  </div>
-                  <div className="text-[10px] text-muted mt-0.5">{formatTime(msg.created_at)}</div>
-                </div>
+              <div className={`px-3 py-2 rounded-lg text-sm ${
+                isMe(msg)
+                  ? 'bg-accent-secondary text-white'
+                  : 'bg-surface-hover text-text-primary'
+              }`}>
+                {msg.message}
+              </div>
+              <div className="text-[10px] text-text-tertiary mt-0.5">
+                {new Date(msg.created_at).toLocaleTimeString()}
               </div>
             </div>
-          )
-        })}
+          </div>
+        ))}
         <div ref={bottomRef} />
       </div>
 
       {userId ? (
-        <form onSubmit={handleSend} className="mt-3 flex gap-2">
+        <form onSubmit={handleSend} className="mt-4 flex gap-2">
           <input
             type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder="Type a message..."
             maxLength={500}
-            className="flex-1 px-4 py-3 bg-card border border-border rounded-lg text-sm focus:outline-none focus:border-accent"
+            className="flex-1 px-4 py-3 bg-white border border-border rounded-lg text-sm text-text-primary placeholder-text-tertiary focus:outline-none focus:border-accent-secondary"
           />
           <button
             type="submit"
             disabled={sending || !input.trim()}
-            className="px-4 py-3 bg-accent text-background rounded-lg font-semibold text-sm hover:bg-accent-dim disabled:opacity-40"
+            className="px-4 py-3 bg-accent-secondary text-white rounded-lg font-semibold text-sm hover:bg-accent-secondary/90 disabled:opacity-40"
           >
             Send
           </button>
         </form>
       ) : (
-        <div className="mt-3 text-center text-sm text-muted py-3 bg-card border border-border rounded-lg">
-          <Link href="/login" className="text-accent hover:underline">Sign in</Link> to join the chat
+        <div className="mt-4 text-center text-sm text-text-tertiary py-3 bg-white border border-border rounded-lg">
+          Sign in to join the chat
         </div>
       )}
     </div>
