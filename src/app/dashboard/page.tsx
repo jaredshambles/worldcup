@@ -12,20 +12,24 @@ export default async function DashboardPage() {
   if (!user) redirect('/login')
 
   // Ensure user profile exists (in case the trigger didn't fire)
-  await supabase.from('profiles').upsert(
-    {
-      id: user.id,
-      email: user.email,
-      full_name: user.user_metadata?.full_name || user.email?.split('@')[0],
-    },
-    { onConflict: 'id' }
-  )
+  try {
+    await supabase.from('profiles').upsert(
+      {
+        id: user.id,
+        email: user.email,
+        full_name: user.user_metadata?.full_name || user.email?.split('@')[0],
+      },
+      { onConflict: 'id' }
+    )
+  } catch (error) {
+    console.error('Profile creation error:', error)
+  }
 
   const [
-    { data: predictions },
-    { data: leaderboard },
-    { data: bonusAnswers },
-    { data: bonusQuestions },
+    { data: predictions, error: predError },
+    { data: leaderboard, error: leaderError },
+    { data: bonusAnswers, error: bonusError },
+    { data: bonusQuestions, error: questionsError },
   ] = await Promise.all([
     supabase
       .from('predictions')
@@ -36,6 +40,12 @@ export default async function DashboardPage() {
     supabase.from('bonus_answers').select('*').eq('player_id', user.id),
     supabase.from('bonus_questions').select('*'),
   ])
+
+  // Log any errors for debugging
+  if (predError) console.error('Predictions error:', predError)
+  if (leaderError) console.error('Leaderboard error:', leaderError)
+  if (bonusError) console.error('Bonus answers error:', bonusError)
+  if (questionsError) console.error('Bonus questions error:', questionsError)
 
   const me = leaderboard?.find(e => e.player_id === user.id) as LeaderboardEntry | undefined
   const preds = (predictions || []) as PredictionWithMatch[]
