@@ -8,7 +8,7 @@ export default async function BracketPage() {
   const supabase = await createClient()
 
   const [{ data: matches }, { data: groupMatches }] = await Promise.all([
-    supabase.from('matches').select('*').neq('stage', 'group').order('match_number'),
+    supabase.from('matches').select('*').order('match_number'),
     supabase.from('matches').select('*').eq('stage', 'group').order('match_number'),
   ])
 
@@ -48,4 +48,6 @@ export default async function BracketPage() {
       groupStandings={standings}
     />
   )
+
+// Note: knockoutMatches includes ALL matches (both group and knockout) to support filtering in BracketView
 }
