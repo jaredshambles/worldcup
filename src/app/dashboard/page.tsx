@@ -11,6 +11,22 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  // Ensure user profile exists
+  const { data: existingProfile } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('id', user.id)
+    .single()
+
+  if (!existingProfile) {
+    // Create profile if it doesn't exist (in case trigger didn't fire)
+    await supabase.from('profiles').insert({
+      id: user.id,
+      email: user.email,
+      full_name: user.user_metadata?.full_name || user.email?.split('@')[0],
+    })
+  }
+
   const [
     { data: predictions },
     { data: leaderboard },
