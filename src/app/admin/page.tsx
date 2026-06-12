@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { AdminClient } from './AdminClient'
-import type { Match, Profile, BonusQuestion } from '@/lib/types'
+import type { Match, Profile } from '@/lib/types'
 
 export const revalidate = 0
 
@@ -21,19 +21,16 @@ export default async function AdminPage() {
 
   const [
     { data: matches },
-    { data: profiles },
-    { data: bonusQuestions },
+    { data: players },
   ] = await Promise.all([
     supabase.from('matches').select('*').order('match_number'),
     supabase.from('profiles').select('*').order('full_name'),
-    supabase.from('bonus_questions').select('*'),
   ])
 
   return (
     <AdminClient
       matches={(matches || []) as Match[]}
-      profiles={(profiles || []) as Profile[]}
-      bonusQuestions={(bonusQuestions || []) as BonusQuestion[]}
+      players={(players || []) as Profile[]}
     />
   )
 }
