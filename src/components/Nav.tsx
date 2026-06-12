@@ -65,13 +65,13 @@ export function Nav() {
   if (user?.is_admin) allLinks.push({ href: '/admin', label: 'Admin' })
 
   return (
-    <nav className="bg-card border-b border-border sticky top-0 z-50">
+    <nav className="bg-white border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <span className="text-xl">&#9917;</span>
-            <span className="font-bold text-accent hidden sm:inline">WC 2026</span>
+            <span className="font-bold text-accent-primary hidden sm:inline">WC 2026</span>
           </Link>
 
           {/* Desktop nav */}
@@ -82,8 +82,8 @@ export function Nav() {
                 href={link.href}
                 className={`px-3 py-1.5 rounded text-sm transition-colors ${
                   pathname === link.href
-                    ? 'bg-accent text-background font-semibold'
-                    : 'text-muted hover:text-foreground hover:bg-card-hover'
+                    ? 'bg-accent-primary text-white font-semibold'
+                    : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover'
                 }`}
               >
                 {link.label}
@@ -95,12 +95,12 @@ export function Nav() {
           <div className="flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted hidden sm:inline">
+                <span className="text-sm text-text-secondary hidden sm:inline">
                   {user.nickname || user.full_name}
                 </span>
                 <button
                   onClick={handleSignOut}
-                  className="text-xs px-2 py-1 rounded bg-card-hover text-muted hover:text-foreground transition-colors"
+                  className="text-xs px-2 py-1 rounded bg-surface-hover text-text-secondary hover:text-text-primary transition-colors"
                 >
                   Sign Out
                 </button>
@@ -108,7 +108,7 @@ export function Nav() {
             ) : (
               <Link
                 href="/login"
-                className="text-sm px-3 py-1.5 rounded bg-accent text-background font-semibold hover:bg-accent-dim transition-colors"
+                className="text-sm px-3 py-1.5 rounded bg-accent-primary text-white font-semibold hover:bg-danger transition-colors"
               >
                 Sign In
               </Link>
@@ -119,7 +119,7 @@ export function Nav() {
               className="md:hidden p-1"
               onClick={() => setMenuOpen(!menuOpen)}
             >
-              <svg className="w-6 h-6 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-6 h-6 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {menuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
@@ -140,8 +140,8 @@ export function Nav() {
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-sm rounded transition-colors ${
                   pathname === link.href
-                    ? 'bg-accent text-background font-semibold'
-                    : 'text-muted hover:text-foreground'
+                    ? 'bg-accent-primary text-white font-semibold'
+                    : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 {link.label}

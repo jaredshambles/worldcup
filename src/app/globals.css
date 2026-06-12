@@ -116,6 +116,13 @@ input[type="number"]::-webkit-outer-spin-button {
   @apply transition-colors duration-200;
 }
 
+/* Custom text sizes */
+@layer utilities {
+  .text-rank-hero {
+    @apply text-6xl sm:text-7xl md:text-8xl;
+  }
+}
+
 /* Respect prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   * {

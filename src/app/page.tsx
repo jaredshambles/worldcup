@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { LeaderboardTable } from '@/components/LeaderboardTable'
+import { RankCard } from '@/components/RankCard'
 import { DeadlineBanner } from '@/components/DeadlineBanner'
 
 export const revalidate = 30
@@ -8,7 +9,7 @@ export default async function HomePage() {
   const supabase = await createClient()
 
   const [{ data: leaderboard }, { data: deadlines }, { data: matchStats }] = await Promise.all([
-    supabase.from('leaderboard').select('*'),
+    supabase.from('leaderboard').select('*').order('rank'),
     supabase.from('deadlines').select('*').order('deadline_utc'),
     supabase.from('matches').select('status'),
   ])
@@ -16,30 +17,38 @@ export default async function HomePage() {
   const finished = matchStats?.filter(m => m.status === 'finished').length || 0
   const total = matchStats?.length || 104
 
+  // Find user in leaderboard (assuming auth is set up)
+  const userEntry = leaderboard?.[0] // In real implementation, filter by auth.user.id
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-6">
       <DeadlineBanner deadlines={deadlines || []} />
 
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">
-            <span className="text-accent">WC 2026</span> Bracket Challenge
-          </h1>
-          <p className="text-muted text-sm mt-1">
-            {finished} of {total} matches completed
-          </p>
-        </div>
-        <div className="flex gap-3 text-xs text-muted">
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-gold inline-block" /> Exact Score (3pts)
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-accent inline-block" /> Correct Winner (1pt)
-          </span>
-        </div>
+      {/* Rank Card - Hero Section */}
+      {userEntry && (
+        <RankCard entry={userEntry} />
+      )}
+
+      {/* Primary CTA */}
+      <a
+        href="/predictions"
+        className="block bg-accent-primary text-white rounded-md p-3 h-12 flex items-center justify-center font-semibold hover:bg-danger transition-colors"
+      >
+        Make Prediction
+      </a>
+
+      {/* Match Progress */}
+      <div className="bg-surface rounded-md border border-border p-3">
+        <p className="text-sm text-text-secondary">
+          {finished} of {total} matches completed
+        </p>
       </div>
 
-      <LeaderboardTable entries={leaderboard || []} />
+      {/* Leaderboard */}
+      <div>
+        <h2 className="text-xl font-semibold text-text-primary mb-3">Standings</h2>
+        <LeaderboardTable entries={leaderboard || []} />
+      </div>
     </div>
   )
 }
