@@ -1,8 +1,4 @@
 import { createClient } from '@/lib/supabase/server'
-import { LeaderboardTable } from '@/components/LeaderboardTable'
-import { RankCard } from '@/components/RankCard'
-import { DeadlineBanner } from '@/components/DeadlineBanner'
-import { PullToRefresh } from '@/components/PullToRefresh'
 import { HomeContent } from './HomeContent'
 
 export const revalidate = 30
@@ -23,18 +19,12 @@ export default async function HomePage() {
   const userEntry = leaderboard?.[0] // In real implementation, filter by auth.user.id
 
   return (
-    <PullToRefresh onRefresh={async () => {
-      // Revalidate the page data
-      // In a real app, you'd call an API to refresh
-      await new Promise(resolve => setTimeout(resolve, 1000))
-    }}>
-      <HomeContent
-        leaderboard={leaderboard || []}
-        deadlines={deadlines || []}
-        userEntry={userEntry}
-        finished={finished}
-        total={total}
-      />
-    </PullToRefresh>
+    <HomeContent
+      leaderboard={leaderboard || []}
+      deadlines={deadlines || []}
+      userEntry={userEntry}
+      finished={finished}
+      total={total}
+    />
   )
 }
