@@ -1,6 +1,7 @@
 'use client'
 
 import React, { ButtonHTMLAttributes, ReactNode } from 'react'
+import { useHaptic } from '@/hooks/useHaptic'
 
 type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost'
 type ButtonSize = 'sm' | 'md' | 'lg'
@@ -48,8 +49,18 @@ export function Button({
   fullWidth = false,
   disabled,
   className,
+  onClick,
   ...props
 }: ButtonProps) {
+  const { button: triggerButtonHaptic } = useHaptic()
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!disabled && !isLoading) {
+      triggerButtonHaptic()
+    }
+    onClick?.(e)
+  }
+
   // Size classes - height and padding
   const sizeClasses = {
     sm: 'h-9 px-3 text-sm',
@@ -88,6 +99,7 @@ export function Button({
     <button
       disabled={disabled || isLoading}
       className={allClasses}
+      onClick={handleClick}
       {...props}
     >
       {isLoading ? (
