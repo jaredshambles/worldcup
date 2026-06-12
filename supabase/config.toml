@@ -1,0 +1,38 @@
+# Supabase Configuration
+
+[api]
+enabled = true
+max_body_size = "4 MiB"
+default_query_only = false
+
+[db]
+pooling_mode = "transaction"
+max_client_conn = 100
+
+[auth]
+enabled = true
+email.confirmations_auto_expire = 86400
+external.apple.enabled = false
+external.azure.enabled = false
+external.facebook.enabled = false
+external.github.enabled = false
+external.gitlab.enabled = false
+external.google.enabled = false
+external.keycloak.enabled = false
+external.linkedin.enabled = false
+external.linkedin_oidc.enabled = false
+external.okta.enabled = false
+external.slack.enabled = false
+external.spotify.enabled = false
+external.twitch.enabled = false
+external.twitter.enabled = false
+external.workos.enabled = false
+external.zoom.enabled = false
+
+[realtime]
+enabled = true
+max_bytes_per_second = 1048576
+max_connections = 100
+max_subscriptions_per_connection = 500
+max_joins_per_second = 100
+max_events_per_second = 1000
