@@ -48,11 +48,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-20">
-      <div className="bg-card rounded-lg border border-border p-8 space-y-6">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6">
+      <div className="w-full max-w-md bg-card rounded-lg border border-border p-6 sm:p-8 space-y-6">
         <div className="text-center">
           <div className="text-4xl mb-2">&#9917;</div>
-          <h1 className="text-xl font-bold">Sign in to WC Bracket Challenge</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Sign in to WC Bracket Challenge</h1>
           <p className="text-muted text-sm mt-1">Enter your email to receive a magic link</p>
         </div>
 
@@ -63,13 +63,13 @@ export default function LoginPage() {
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder:text-muted focus:outline-none focus:border-accent"
+            className="w-full px-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder:text-muted focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent focus:ring-offset-2"
           />
           {error && <p className="text-danger text-sm">{error}</p>}
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-accent text-background font-semibold rounded-lg hover:bg-accent-dim transition-colors disabled:opacity-50"
+            className="w-full py-3 bg-accent text-background font-semibold rounded-lg hover:bg-accent-dim active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Sending...' : 'Send Magic Link'}
           </button>
