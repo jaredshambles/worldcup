@@ -1,51 +1,126 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f172a;
-  --foreground: #e2e8f0;
-  --card: #1e293b;
-  --card-hover: #334155;
-  --accent: #22c55e;
-  --accent-dim: #16a34a;
-  --gold: #eab308;
-  --silver: #94a3b8;
-  --bronze: #d97706;
-  --danger: #ef4444;
-  --muted: #64748b;
-  --border: #334155;
+  /* Light Theme - ESPN Inspired */
+  --background: #ffffff;
+  --foreground: #1f2937;
+  --surface: #f9fafb;
+  --surface-hover: #f3f4f6;
+  --border: #e5e7eb;
+
+  /* Text colors */
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+
+  /* Accent colors */
+  --accent-primary: #ef4444;      /* ESPN Red */
+  --accent-secondary: #3b82f6;    /* Sports Blue */
+  --success: #34d399;              /* Green - user position */
+  --warning: #fbbf24;              /* Amber - medals */
+  --danger: #dc2626;               /* Dark red - urgent */
+  --info: #dbeafe;                 /* Light blue - micro-interactions */
+
+  /* Semantic colors */
+  --highlight-bg: #f0fdf4;         /* Your position background */
+  --highlight-border: #86efac;     /* Your position border */
+  --urgency-bg: #fef3c7;           /* Deadline background */
+  --urgency-border: #fde047;       /* Deadline border */
+  --urgency-text: #dc2626;         /* Deadline text */
+  --achievement-bg: #dbeafe;       /* Achievement background */
+  --achievement-border: #93c5fd;   /* Achievement border */
+  --achievement-text: #0369a1;     /* Achievement text */
+  --error-bg: #fee2e2;             /* Error background */
+
+  /* Typography */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-hover: var(--card-hover);
-  --color-accent: var(--accent);
-  --color-accent-dim: var(--accent-dim);
-  --color-gold: var(--gold);
-  --color-silver: var(--silver);
-  --color-bronze: var(--bronze);
-  --color-danger: var(--danger);
-  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
   --color-border: var(--border);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --color-highlight-bg: var(--highlight-bg);
+  --color-highlight-border: var(--highlight-border);
+  --color-urgency-bg: var(--urgency-bg);
+  --color-urgency-border: var(--urgency-border);
+  --color-urgency-text: var(--urgency-text);
+  --color-achievement-bg: var(--achievement-bg);
+  --color-achievement-border: var(--achievement-border);
+  --color-achievement-text: var(--achievement-text);
+  --color-error-bg: var(--error-bg);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
+/* Base styles */
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-primary);
+  font-family: var(--font-sans), Arial, sans-serif;
+  line-height: 1.6;
 }
 
-/* Score input styling */
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-tertiary);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Number input spinner styling */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   opacity: 1;
   height: 32px;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--card); }
-::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 3px; }
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent-secondary);
+  outline-offset: 2px;
+}
+
+/* Smooth transitions */
+* {
+  @apply transition-colors duration-200;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

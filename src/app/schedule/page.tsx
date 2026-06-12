@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { STAGE_LABELS } from '@/lib/types'
+import { STAGE_LABELS, formatTeamName } from '@/lib/types'
 import type { Match } from '@/lib/types'
 
 export const revalidate = 60
@@ -68,14 +68,14 @@ export default async function SchedulePage() {
                 <div key={m.id} className="flex items-center gap-3 px-4 py-3 text-sm">
                   <div className="w-12 text-xs text-muted shrink-0">{m.match_time}</div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{m.home_team}</span>
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="font-medium truncate">{formatTeamName(m.home_team)}</span>
                       {m.status === 'finished' ? (
-                        <span className="text-accent font-bold">{m.home_score} - {m.away_score}</span>
+                        <span className="text-accent font-bold shrink-0">{m.home_score} - {m.away_score}</span>
                       ) : (
-                        <span className="text-muted">vs</span>
+                        <span className="text-muted shrink-0">vs</span>
                       )}
-                      <span className="font-medium">{m.away_team}</span>
+                      <span className="font-medium truncate">{formatTeamName(m.away_team)}</span>
                       <StatusBadge status={m.status} />
                     </div>
                     <div className="text-xs text-muted">

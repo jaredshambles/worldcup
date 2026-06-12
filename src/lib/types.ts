@@ -109,3 +109,23 @@ export const STAGE_LABELS: Record<string, string> = {
 }
 
 export const STAGE_ORDER = ['group', 'r32', 'r16', 'qf', 'sf', 'third', 'final']
+
+export function formatTeamName(teamName: string): string {
+  if (teamName === 'TBD') return 'TBD'
+
+  // Handle seed labels like "1E", "2A", "3rd A/B/C/D/F"
+  const seedMatch = teamName.match(/^(\d+)(?:st|nd|rd|th)?\s*([A-L])(.*)$/)
+  if (seedMatch) {
+    const [, num, group, rest] = seedMatch
+    const n = parseInt(num)
+    const ordinal = n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th'
+
+    if (rest.includes('/')) {
+      // Multi-group qualifier like "3rd A/B/C/D/F"
+      return `${n}${ordinal} place from Groups ${group}${rest}`
+    }
+    return `${n}${ordinal} place from Group ${group}`
+  }
+
+  return teamName
+}

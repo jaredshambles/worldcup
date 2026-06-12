@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { STAGE_ORDER, STAGE_LABELS } from '@/lib/types'
+import { STAGE_ORDER, STAGE_LABELS, formatTeamName } from '@/lib/types'
 import type { Match, Prediction, Deadline, BonusQuestion, BonusAnswer } from '@/lib/types'
 
 function isDeadlinePassed(deadlines: Deadline[], stage: string): boolean {
@@ -58,11 +58,11 @@ function ScoreInput({ match, prediction, locked, onSave }: ScoreInputProps) {
   ) : null
 
   return (
-    <div className={`flex items-center gap-2 py-2 px-3 rounded text-sm ${
+    <div className={`flex items-center gap-2 py-2 px-3 rounded text-xs ${
       isFinished ? 'bg-card-hover/30' : ''
     }`}>
       <div className="flex-1 min-w-0">
-        <span className="truncate">{match.home_team}</span>
+        <span className="truncate">{formatTeamName(match.home_team)}</span>
         {isFinished && (
           <span className="text-xs text-muted ml-1">({match.home_score}-{match.away_score})</span>
         )}
@@ -91,7 +91,7 @@ function ScoreInput({ match, prediction, locked, onSave }: ScoreInputProps) {
       </div>
 
       <div className="flex-1 min-w-0 text-right">
-        <span className="truncate">{match.away_team}</span>
+        <span className="truncate">{formatTeamName(match.away_team)}</span>
       </div>
 
       <div className="w-16 shrink-0 text-right">
