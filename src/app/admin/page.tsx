@@ -8,9 +8,17 @@ export const revalidate = 0
 
 export default async function AdminPage() {
   const user = await getCurrentUser()
-  if (!user || !user.is_admin) redirect('/')
+  if (!user) redirect('/')
 
   const supabase = await createClient()
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('is_admin')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile?.is_admin) redirect('/')
 
   const [
     { data: matches },

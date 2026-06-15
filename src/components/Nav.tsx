@@ -28,15 +28,15 @@ export function Nav() {
 
   useEffect(() => {
     if (session?.user) {
+      const u = session.user as any
       const profile: Profile = {
-        id: session.user.id,
-        email: session.user.email || '',
-        full_name: session.user.full_name || session.user.name || '',
-        nickname: session.user.nickname || '',
-        is_admin: session.user.is_admin || false,
+        id: u.id,
+        email: u.email || '',
+        full_name: u.full_name || u.name || '',
+        nickname: u.nickname || '',
+        is_admin: u.is_admin || false,
         is_paid: false,
-        avatar_url: session.user.avatar_url || session.user.image || '',
-        created_at: session.user.createdAt || new Date().toISOString(),
+        avatar_url: u.avatar_url || u.image || '',
       }
       setUser(profile)
     } else {
