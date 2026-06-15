@@ -65,8 +65,6 @@ export default function LoginPage() {
         email,
         password,
         name: fullName,
-        full_name: fullName,
-        nickname: nickname || null,
         callbackURL: '/dashboard',
       })
 
