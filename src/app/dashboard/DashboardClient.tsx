@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import type { PredictionWithMatch, LeaderboardEntry, BonusAnswer, BonusQuestion } from '@/lib/types'
-import { STAGE_LABELS, STAGE_ORDER } from '@/lib/types'
+import { STAGE_LABELS, STAGE_ORDER, getTeamFlag } from '@/lib/types'
 
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
   return (
@@ -109,7 +109,7 @@ export function DashboardClient({
                 <div key={p.id} className="px-4 py-3 flex items-center justify-between text-sm">
                   <div className="flex-1 min-w-0">
                     <div className="font-medium truncate">
-                      {m.home_team} {m.home_score} - {m.away_score} {m.away_team}
+                      {getTeamFlag(m.home_team)} {m.home_team} {m.home_score} - {m.away_score} {m.away_team} {getTeamFlag(m.away_team)}
                     </div>
                     <div className="text-xs text-muted">
                       Your pick: {p.predicted_home} - {p.predicted_away}
@@ -142,7 +142,7 @@ export function DashboardClient({
                 <div key={p.id} className="px-4 py-3 flex items-center justify-between text-sm">
                   <div className="flex-1 min-w-0">
                     <div className="font-medium truncate">
-                      {m.home_team} vs {m.away_team}
+                      {getTeamFlag(m.home_team)} {m.home_team} vs {m.away_team} {getTeamFlag(m.away_team)}
                     </div>
                     <div className="text-xs text-muted">
                       {m.match_date} at {m.match_time}

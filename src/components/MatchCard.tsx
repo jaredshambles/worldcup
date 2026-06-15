@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Card } from '@/components/ui/Card'
 import { ScoreInput } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
+import { getTeamFlag } from '@/lib/types'
 import type { Match, Prediction } from '@/lib/types'
 
 interface MatchCardProps {
@@ -50,7 +51,7 @@ export function MatchCard({
       {/* Match Header */}
       <div className="space-y-1">
         <h3 className="text-sm font-medium text-text-primary">
-          {match.home_team} vs {match.away_team}
+          {getTeamFlag(match.home_team)} {match.home_team} vs {match.away_team} {getTeamFlag(match.away_team)}
         </h3>
         <p className="text-xs text-text-secondary">
           {match.stage === 'group' ? `Group ${match.group_letter}` : match.stage.toUpperCase()} • {matchDate} {matchTime}

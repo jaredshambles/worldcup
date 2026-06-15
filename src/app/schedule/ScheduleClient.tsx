@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { TimezoneSelector } from '@/components/TimezoneSelector'
 import { useTimezone, formatTimeInTimezone, TIMEZONES } from '@/lib/useTimezone'
-import { STAGE_LABELS, formatTeamName } from '@/lib/types'
+import { STAGE_LABELS, formatTeamName, getTeamFlag } from '@/lib/types'
 import type { Match } from '@/lib/types'
 
 function StatusBadge({ status }: { status: string }) {
@@ -78,13 +78,13 @@ export function ScheduleClient({ matches }: { matches: Match[] }) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 text-xs">
-                      <span className="font-medium truncate">{formatTeamName(m.home_team)}</span>
+                      <span className={`truncate ${m.status === 'finished' && m.home_score !== null && m.away_score !== null && m.home_score > m.away_score ? 'font-bold' : 'font-medium'}`}>{getTeamFlag(m.home_team)} {formatTeamName(m.home_team)}</span>
                       {m.status === 'finished' ? (
                         <span className="text-accent font-bold shrink-0">{m.home_score} - {m.away_score}</span>
                       ) : (
                         <span className="text-muted shrink-0">vs</span>
                       )}
-                      <span className="font-medium truncate">{formatTeamName(m.away_team)}</span>
+                      <span className={`truncate ${m.status === 'finished' && m.home_score !== null && m.away_score !== null && m.away_score > m.home_score ? 'font-bold' : 'font-medium'}`}>{getTeamFlag(m.away_team)} {formatTeamName(m.away_team)}</span>
                       <StatusBadge status={m.status} />
                     </div>
                     <div className="text-xs text-muted">

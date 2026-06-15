@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { getTeamFlag } from '@/lib/types'
 import type { Profile, Match, Prediction } from '@/lib/types'
 
 export function H2HClient({
@@ -96,7 +97,7 @@ export function H2HClient({
                     ) : <span className="text-muted text-xs">No pick</span>}
                   </div>
                   <div className="text-center text-xs px-2">
-                    <div className="font-medium">{m.home_team} {m.home_score}-{m.away_score} {m.away_team}</div>
+                    <div className="font-medium">{getTeamFlag(m.home_team)} {m.home_team} {m.home_score}-{m.away_score} {m.away_team} {getTeamFlag(m.away_team)}</div>
                   </div>
                   <div className="text-right">
                     {oppPred ? (

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { STAGE_LABELS } from '@/lib/types'
+import { STAGE_LABELS, getTeamFlag } from '@/lib/types'
 import type { Match } from '@/lib/types'
 
 interface BracketViewProps {
@@ -66,7 +66,7 @@ export function BracketView({ knockoutMatches, groupStandings }: BracketViewProp
                         key={team.team}
                         className="flex justify-between items-center text-sm"
                       >
-                        <span className="text-text-primary">{team.team}</span>
+                        <span className="text-text-primary">{getTeamFlag(team.team)} {team.team}</span>
                         <span className="text-text-secondary">{team.pts} pts</span>
                       </div>
                     ))
@@ -130,8 +130,8 @@ export function BracketView({ knockoutMatches, groupStandings }: BracketViewProp
                 </p>
               )}
               <div className="space-y-1">
-                <p className="text-sm text-text-primary">{match.home_team || 'TBD'}</p>
-                <p className="text-sm text-text-secondary">{match.away_team || 'TBD'}</p>
+                <p className="text-sm text-text-primary">{getTeamFlag(match.home_team)} {match.home_team || 'TBD'}</p>
+                <p className="text-sm text-text-secondary">{getTeamFlag(match.away_team)} {match.away_team || 'TBD'}</p>
               </div>
               {match.status === 'finished' && (
                 <p className="text-sm font-semibold text-success">

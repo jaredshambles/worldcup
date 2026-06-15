@@ -1,16 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { useSession, signOut } from '@/lib/auth-client'
 import type { Profile } from '@/lib/types'
 
 const publicLinks = [
   { href: '/', label: 'Leaderboard' },
   { href: '/schedule', label: 'Schedule' },
   { href: '/bracket', label: 'Bracket' },
-  { href: '/news', label: 'News' },
   { href: '/chat', label: 'Chat' },
 ]
 
@@ -22,43 +21,32 @@ const authLinks = [
 
 export function Nav() {
   const pathname = usePathname()
+  const router = useRouter()
+  const { data: session } = useSession()
   const [user, setUser] = useState<Profile | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
-  const supabase = createClient()
 
   useEffect(() => {
-    async function getUser() {
-      const { data: { user: authUser } } = await supabase.auth.getUser()
-      if (authUser) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', authUser.id)
-          .single()
-        if (data) setUser(data as Profile)
+    if (session?.user) {
+      const profile: Profile = {
+        id: session.user.id,
+        email: session.user.email || '',
+        full_name: session.user.full_name || session.user.name || '',
+        nickname: session.user.nickname || '',
+        is_admin: session.user.is_admin || false,
+        is_paid: false,
+        avatar_url: session.user.avatar_url || session.user.image || '',
+        created_at: session.user.createdAt || new Date().toISOString(),
       }
+      setUser(profile)
+    } else {
+      setUser(null)
     }
-    getUser()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_OUT') {
-        setUser(null)
-      } else if (session?.user) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single()
-        if (data) setUser(data as Profile)
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
+  }, [session])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    window.location.href = '/'
+    await signOut()
+    router.push('/')
   }
 
   const allLinks = user ? [...publicLinks, ...authLinks] : publicLinks
