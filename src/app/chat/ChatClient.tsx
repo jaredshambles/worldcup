@@ -50,9 +50,10 @@ export function ChatClient({
     e.preventDefault()
     if (!input.trim() || !userId) return
     setSending(true)
-    await supabase.from('chat_messages').insert({
-      player_id: userId,
-      message: input.trim(),
+    await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: input.trim() }),
     })
     setInput('')
     setSending(false)

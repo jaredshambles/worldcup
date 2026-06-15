@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/service'
+import { getCurrentUser } from '@/lib/auth-server'
 import { STAGE_LABELS, STAGE_ORDER } from '@/lib/types'
 import type { PredictionWithMatch, LeaderboardEntry } from '@/lib/types'
 import { DashboardClient } from './DashboardClient'
@@ -7,17 +9,19 @@ import { DashboardClient } from './DashboardClient'
 export const revalidate = 30
 
 export default async function DashboardPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getCurrentUser()
   if (!user) redirect('/login')
 
-  // Ensure user profile exists (in case the trigger didn't fire)
+  const supabase = await createClient()
+  const serviceSupabase = createServiceClient()
+
+  // Ensure user profile exists (uses service role to bypass RLS)
   try {
-    await supabase.from('profiles').upsert(
+    await serviceSupabase.from('profiles').upsert(
       {
         id: user.id,
         email: user.email,
-        full_name: user.user_metadata?.full_name || user.email?.split('@')[0],
+        full_name: (user as any).full_name || user.name || user.email?.split('@')[0],
       },
       { onConflict: 'id' }
     )

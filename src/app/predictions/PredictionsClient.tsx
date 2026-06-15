@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { StageTabs } from '@/components/StageTabs'
 import { MatchCard } from '@/components/MatchCard'
 import { Card } from '@/components/ui/Card'
-import { createClient } from '@/lib/supabase/client'
 import type { Match, Prediction, Deadline, BonusQuestion, BonusAnswer } from '@/lib/types'
 
 function isDeadlinePassed(deadlines: Deadline[], stage: string): boolean {
@@ -39,30 +38,26 @@ export function PredictionsClient({
     return map
   })
 
-  const supabase = createClient()
-
   const stageMatches = matches.filter(m => m.stage === activeStage)
 
   const handleSavePrediction = async (matchId: number, home: number, away: number) => {
     const existing = predictions.find(p => p.match_id === matchId)
 
-    if (existing) {
-      const { data } = await supabase
-        .from('predictions')
-        .update({ predicted_home: home, predicted_away: away })
-        .eq('id', existing.id)
-        .select()
-        .single()
-      if (data) {
+    const res = await fetch('/api/predictions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        matchId,
+        predictedHome: home,
+        predictedAway: away,
+        predictionId: existing?.id,
+      }),
+    })
+    const data = await res.json()
+    if (res.ok) {
+      if (existing) {
         setPredictions(prev => prev.map(p => p.id === existing.id ? data as Prediction : p))
-      }
-    } else {
-      const { data } = await supabase
-        .from('predictions')
-        .insert({ player_id: userId, match_id: matchId, predicted_home: home, predicted_away: away })
-        .select()
-        .single()
-      if (data) {
+      } else {
         setPredictions(prev => [...prev, data as Prediction])
       }
     }
@@ -73,23 +68,20 @@ export function PredictionsClient({
     if (!text) return
     const existing = bonusAnswers.find(a => a.question_id === questionId)
 
-    if (existing) {
-      const { data } = await supabase
-        .from('bonus_answers')
-        .update({ answer_text: text })
-        .eq('id', existing.id)
-        .select()
-        .single()
-      if (data) {
+    const res = await fetch('/api/bonus-answers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        questionId,
+        answerText: text,
+        answerId: existing?.id,
+      }),
+    })
+    const data = await res.json()
+    if (res.ok) {
+      if (existing) {
         setBonusAnswers(prev => prev.map(a => a.id === existing.id ? data as BonusAnswer : a))
-      }
-    } else {
-      const { data } = await supabase
-        .from('bonus_answers')
-        .insert({ player_id: userId, question_id: questionId, answer_text: text })
-        .select()
-        .single()
-      if (data) {
+      } else {
         setBonusAnswers(prev => [...prev, data as BonusAnswer])
       }
     }

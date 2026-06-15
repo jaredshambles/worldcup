@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { getCurrentUser } from '@/lib/auth-server'
 import { STAGE_ORDER, STAGE_LABELS } from '@/lib/types'
 import type { Match, Prediction, BonusQuestion, BonusAnswer } from '@/lib/types'
 import { PredictionsClient } from './PredictionsClient'
@@ -7,9 +8,10 @@ import { PredictionsClient } from './PredictionsClient'
 export const revalidate = 15
 
 export default async function PredictionsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getCurrentUser()
   if (!user) redirect('/login')
+
+  const supabase = await createClient()
 
   const [
     { data: matches },
