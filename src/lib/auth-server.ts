@@ -1,13 +1,20 @@
-import { headers } from 'next/headers'
-import { auth } from './auth'
+import { cookies } from 'next/headers'
+import { prisma } from './prisma'
 
 export async function getSession() {
   try {
-    const headersList = await headers()
-    const session = await auth.api.getSession({
-      headers: headersList,
+    const cookieStore = await cookies()
+    const token = cookieStore.get('better-auth.session_token')?.value
+    if (!token) return null
+
+    const session = await prisma.session.findUnique({
+      where: { token },
+      include: { user: true },
     })
-    return session
+
+    if (!session || session.expiresAt < new Date()) return null
+
+    return { session, user: session.user }
   } catch (error) {
     console.error('Session check error:', error)
     return null
