@@ -5,6 +5,7 @@ export async function getSession() {
   try {
     const cookieStore = await cookies()
     const token = cookieStore.get('better-auth.session_token')?.value
+      || cookieStore.get('__Secure-better-auth.session_token')?.value
     if (!token) return null
 
     const session = await prisma.session.findUnique({

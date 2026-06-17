@@ -2,9 +2,10 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get('better-auth.session_token')
+    || request.cookies.get('__Secure-better-auth.session_token')
   const hasSession = !!sessionCookie?.value
 
-  const protectedRoutes = ['/dashboard', '/predictions', '/bracket', '/admin', '/schedule', '/head-to-head', '/news', '/chat']
+  const protectedRoutes = ['/dashboard', '/predictions', '/admin', '/head-to-head']
   const isProtectedRoute = protectedRoutes.some(route => request.nextUrl.pathname.startsWith(route))
 
   if (isProtectedRoute && !hasSession) {
