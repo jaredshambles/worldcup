@@ -10,7 +10,7 @@ export const revalidate = 30
 
 export default async function DashboardPage() {
   const user = await getCurrentUser()
-  if (!user) redirect('/login')
+  if (!user) redirect('/login?from=expired')
 
   const supabase = await createClient()
   const serviceSupabase = createServiceClient()

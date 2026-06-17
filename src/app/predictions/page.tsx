@@ -9,7 +9,7 @@ export const revalidate = 15
 
 export default async function PredictionsPage() {
   const user = await getCurrentUser()
-  if (!user) redirect('/login')
+  if (!user) redirect('/login?from=expired')
 
   const supabase = await createClient()
 

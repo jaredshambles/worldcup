@@ -4,9 +4,12 @@ import { prisma } from './prisma'
 export async function getSession() {
   try {
     const cookieStore = await cookies()
-    const token = cookieStore.get('better-auth.session_token')?.value
+    const rawToken = cookieStore.get('better-auth.session_token')?.value
       || cookieStore.get('__Secure-better-auth.session_token')?.value
-    if (!token) return null
+    if (!rawToken) return null
+
+    // better-auth cookie format is "token.signature" — strip the signature
+    const token = rawToken.split('.')[0]
 
     const session = await prisma.session.findUnique({
       where: { token },

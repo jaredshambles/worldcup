@@ -1,9 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { useSession, signOut } from '@/lib/auth-client'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
+async function signOutAndRedirect() {
+  await fetch('/api/auth/sign-out', { method: 'POST' })
+  window.location.href = '/'
+}
 import type { Profile } from '@/lib/types'
 
 const publicLinks = [
@@ -19,34 +22,14 @@ const authLinks = [
   { href: '/head-to-head', label: 'H2H' },
 ]
 
-export function Nav() {
+export function Nav({ serverUser }: { serverUser: Profile | null }) {
   const pathname = usePathname()
-  const router = useRouter()
-  const { data: session } = useSession()
-  const [user, setUser] = useState<Profile | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
 
-  useEffect(() => {
-    if (session?.user) {
-      const u = session.user as any
-      const profile: Profile = {
-        id: u.id,
-        email: u.email || '',
-        full_name: u.full_name || u.name || '',
-        nickname: u.nickname || '',
-        is_admin: u.is_admin || false,
-        is_paid: false,
-        avatar_url: u.avatar_url || u.image || '',
-      }
-      setUser(profile)
-    } else {
-      setUser(null)
-    }
-  }, [session])
+  const user = serverUser
 
-  const handleSignOut = async () => {
-    await signOut()
-    router.push('/')
+  const handleSignOut = () => {
+    signOutAndRedirect()
   }
 
   const allLinks = user ? [...publicLinks, ...authLinks] : publicLinks

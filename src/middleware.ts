@@ -13,7 +13,10 @@ export function middleware(request: NextRequest) {
   }
 
   if (request.nextUrl.pathname === '/login' && hasSession) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    const from = request.nextUrl.searchParams.get('from')
+    if (from !== 'expired') {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
   }
 
   return NextResponse.next()
