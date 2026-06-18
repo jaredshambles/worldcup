@@ -14,9 +14,56 @@ interface AdminClientProps {
 export function AdminClient({ matches, players }: AdminClientProps) {
   const [activeTab, setActiveTab] = useState<'matches' | 'players' | 'bonus'>('matches')
   const [editingMatch, setEditingMatch] = useState<string | null>(null)
+  const [syncing, setSyncing] = useState(false)
+  const [syncResult, setSyncResult] = useState<{ message: string; isError: boolean } | null>(null)
+
+  async function handleSyncScores() {
+    setSyncing(true)
+    setSyncResult(null)
+    try {
+      const res = await fetch('/api/admin/sync-scores', { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) {
+        setSyncResult({ message: data.error || 'Sync failed', isError: true })
+      } else {
+        setSyncResult({ message: data.message || 'Scores synced successfully', isError: false })
+        setTimeout(() => window.location.reload(), 1500)
+      }
+    } catch {
+      setSyncResult({ message: 'Network error — could not reach server', isError: true })
+    } finally {
+      setSyncing(false)
+    }
+  }
 
   return (
     <div className="space-y-6">
+      {/* Sync Scores */}
+      <Card variant="default" className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-semibold text-text-primary">Live Score Sync</h3>
+          <p className="text-xs text-text-secondary">Pull latest results from football-data.org and recalculate points</p>
+        </div>
+        <Button
+          variant="secondary"
+          size="sm"
+          isLoading={syncing}
+          onClick={handleSyncScores}
+        >
+          {syncing ? 'Syncing…' : 'Update Scores'}
+        </Button>
+      </Card>
+
+      {syncResult && (
+        <div className={`px-4 py-3 rounded-lg text-sm font-medium ${
+          syncResult.isError
+            ? 'bg-red-900/30 text-red-300 border border-red-800'
+            : 'bg-green-900/30 text-green-300 border border-green-800'
+        }`}>
+          {syncResult.message}
+        </div>
+      )}
+
       {/* Tabs */}
       <div className="flex gap-2 border-b border-border">
         <button
