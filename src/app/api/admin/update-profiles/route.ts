@@ -1,3 +1,4 @@
+import { getCurrentUser } from '@/lib/auth-server'
 import { createClient } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/service'
 
@@ -31,21 +32,13 @@ const PLAYER_MAPPING: Record<string, { full_name: string; nickname: string | nul
 }
 
 export async function POST(request: Request) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getCurrentUser()
 
-  // Check if user is admin
   if (!user) {
     return Response.json({ error: 'Not authenticated' }, { status: 401 })
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('is_admin')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile?.is_admin) {
+  if (!user.is_admin) {
     return Response.json({ error: 'Not authorized' }, { status: 403 })
   }
 
