@@ -43,6 +43,7 @@ export async function POST(request: Request) {
   }
 
   try {
+    const supabase = await createClient()
     const serviceClient = createServiceClient()
 
     // Fetch all profiles
