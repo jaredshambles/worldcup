@@ -89,7 +89,7 @@ export function H2HClient({
                     {myPred ? (
                       <span className={
                         myPred.points_earned === 3 ? 'text-gold font-bold' :
-                        myPred.points_earned === 1 ? 'text-accent' : 'text-muted'
+                        myPred.points_earned === 2 ? 'text-accent' : 'text-muted'
                       }>
                         {myPred.predicted_home}-{myPred.predicted_away}
                         <span className="text-xs ml-1">({myPred.points_earned})</span>
@@ -103,7 +103,7 @@ export function H2HClient({
                     {oppPred ? (
                       <span className={
                         oppPred.points_earned === 3 ? 'text-gold font-bold' :
-                        oppPred.points_earned === 1 ? 'text-accent' : 'text-muted'
+                        oppPred.points_earned === 2 ? 'text-accent' : 'text-muted'
                       }>
                         <span className="text-xs mr-1">({oppPred.points_earned})</span>
                         {oppPred.predicted_home}-{oppPred.predicted_away}

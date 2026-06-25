@@ -41,7 +41,7 @@ function RankMedal({ rank }: { rank: number }) {
 
 function PointsBadge({ points }: { points: number }) {
   if (points === 3) return <span className="text-xs px-1.5 py-0.5 rounded bg-green-500/20 text-green-400 font-semibold">+3 Exact</span>
-  if (points === 1) return <span className="text-xs px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-semibold">+1 Winner</span>
+  if (points === 2) return <span className="text-xs px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-semibold">+2 Winner</span>
   return <span className="text-xs px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 font-semibold">+0</span>
 }
 

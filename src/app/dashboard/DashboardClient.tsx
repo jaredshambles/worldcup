@@ -104,7 +104,7 @@ export function DashboardClient({
             {recentResults.map(p => {
               const m = p.matches
               const isExact = p.points_earned === 3
-              const isWinner = p.points_earned === 1
+              const isWinner = p.points_earned === 2
               return (
                 <div key={p.id} className="px-4 py-3 flex items-center justify-between text-sm">
                   <div className="flex-1 min-w-0">
@@ -120,7 +120,7 @@ export function DashboardClient({
                     isWinner ? 'bg-accent/20 text-accent' :
                     'bg-danger/20 text-danger'
                   }`}>
-                    {isExact ? '+3' : isWinner ? '+1' : '0'}
+                    {isExact ? '+3' : isWinner ? '+2' : '0'}
                   </div>
                 </div>
               )

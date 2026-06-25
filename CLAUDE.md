@@ -51,7 +51,7 @@ All tables have RLS enabled. Public SELECT on everything. Writes restricted to o
 
 ## Scoring
 - **0 pts**: Wrong winner
-- **1 pt**: Correct winner/draw but wrong score
+- **2 pts**: Correct winner/draw but wrong score
 - **3 pts**: Exact score match
 - **Multiplier**: point_multiplier column on matches (default 1, knockout multiplier TBD)
 - **Bonus**: 5 pts each for 3 bonus questions
