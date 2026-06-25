@@ -37,6 +37,10 @@ export const auth = betterAuth({
       avatar_url: {
         type: "string",
       },
+      must_change_password: {
+        type: "boolean",
+        defaultValue: false,
+      },
     },
   },
 });

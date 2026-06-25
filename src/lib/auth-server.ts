@@ -29,3 +29,11 @@ export async function getCurrentUser() {
   const session = await getSession()
   return session?.user || null
 }
+
+export async function requirePasswordChanged() {
+  const user = await getCurrentUser()
+  if (user && (user as any).must_change_password) {
+    const { redirect } = await import('next/navigation')
+    redirect('/change-password')
+  }
+}

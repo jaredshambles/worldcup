@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { getCurrentUser } from '@/lib/auth-server'
+import { getCurrentUser, requirePasswordChanged } from '@/lib/auth-server'
 import type { Profile } from '@/lib/types'
 import { H2HClient } from './H2HClient'
 
@@ -9,6 +9,7 @@ export const revalidate = 30
 export default async function HeadToHeadPage() {
   const user = await getCurrentUser()
   if (!user) redirect('/login?from=expired')
+  await requirePasswordChanged()
 
   const supabase = await createClient()
 

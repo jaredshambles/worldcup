@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createServiceClient } from '@/lib/supabase/service'
-import { getCurrentUser } from '@/lib/auth-server'
+import { getCurrentUser, requirePasswordChanged } from '@/lib/auth-server'
 import { STAGE_LABELS, STAGE_ORDER } from '@/lib/types'
 import type { PredictionWithMatch, LeaderboardEntry } from '@/lib/types'
 import { DashboardClient } from './DashboardClient'
@@ -11,6 +11,7 @@ export const revalidate = 30
 export default async function DashboardPage() {
   const user = await getCurrentUser()
   if (!user) redirect('/login?from=expired')
+  await requirePasswordChanged()
 
   const supabase = await createClient()
   const serviceSupabase = createServiceClient()

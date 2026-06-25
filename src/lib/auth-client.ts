@@ -33,6 +33,10 @@ export async function resetPassword(opts: { newPassword: string; token?: string 
   return authFetch('/reset-password', opts)
 }
 
+export async function changePassword(opts: { currentPassword: string; newPassword: string }) {
+  return authFetch('/change-password', opts)
+}
+
 export async function signOut() {
   return authFetch('/sign-out', {})
 }

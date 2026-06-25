@@ -33,6 +33,14 @@ export default function LoginPage() {
       if (authError) {
         setError(authError.message || 'Failed to sign in. Please check your email and password.')
       } else {
+        const meRes = await fetch('/api/user/me', { credentials: 'include' })
+        if (meRes.ok) {
+          const me = await meRes.json()
+          if (me.must_change_password) {
+            router.push('/change-password')
+            return
+          }
+        }
         router.push('/dashboard')
       }
     } catch (err) {
