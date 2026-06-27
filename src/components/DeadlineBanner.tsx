@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import type { Deadline } from '@/lib/types'
 
 function getNextDeadline(deadlines: Deadline[]): Deadline | null {
@@ -43,8 +44,20 @@ export function DeadlineBanner({ deadlines }: { deadlines: Deadline[] }) {
         <span className="font-semibold">Next Deadline:</span>{' '}
         <span className="text-muted">{next.description}</span>
       </div>
-      <div className={`text-lg font-mono font-bold ${isUrgent ? 'text-danger' : 'text-accent'}`}>
-        {formatCountdown(remaining)}
+      <div className="flex items-center gap-3">
+        <Link
+          href="/predictions"
+          className={`px-4 py-1.5 rounded-md text-sm font-semibold text-white transition-colors ${
+            isUrgent
+              ? 'bg-danger hover:bg-danger/80'
+              : 'bg-accent hover:bg-accent/80'
+          }`}
+        >
+          Make Picks
+        </Link>
+        <div className={`text-lg font-mono font-bold ${isUrgent ? 'text-danger' : 'text-accent'}`}>
+          {formatCountdown(remaining)}
+        </div>
       </div>
     </div>
   )
